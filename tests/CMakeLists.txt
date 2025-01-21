@@ -1,0 +1,8 @@
+add_executable(sudoku_tests sudoku_tests.cpp)
+add_executable(dancing_links_tests dancing_links_tests.cpp)
+add_executable(LMatrix_tests LMatrix_tests.cpp)
+add_executable(MNode_tests MNode_tests.cpp)
+add_test(NAME sudoku_tests COMMAND sudoku_tests)
+add_test(NAME dancing_links_tests COMMAND dancing_links_tests)
+add_test(NAME LMatrix_tests COMMAND LMatrix_tests)
+add_test(NAME MNode_tests COMMAND MNode_tests)
