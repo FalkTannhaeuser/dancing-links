@@ -237,4 +237,7 @@ void join_du(MNode_t<T> *a, MNode_t<T> *b);
 
 
 } // end namespace 'linked_matrix_GJK'
+
+#include "linked_matrix.tpp"
+
 #endif
