@@ -214,7 +214,7 @@ do {
 void test_big_random_matrix()
 {
     do {
-    int m = 729, n = 4*81;
+    int const m = 729, n = 4*81;
     bool **matrix = new bool*[m];
     srand((int) time(0));
     bool flat_matrix[m*n];
@@ -233,7 +233,7 @@ void test_big_random_matrix()
 void test_big_soluble_matrix()
 {
     do {
-    int m = 729, n = 4*81;
+    int const m = 729, n = 4*81;
     bool **matrix = new bool*[m];
     srand((int) time(0));
     bool flat_matrix[m*n];
