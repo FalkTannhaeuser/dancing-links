@@ -25,8 +25,14 @@ case $(uname -o) in
         fi
         build_dir=build/Cygwin
         if [ ${clang:=0} -eq 1 ] ; then
-            echo "Clang is not available on this platform" > /dev/stderr
-            exit 1
+            build_dir+=_clang
+            cmake_init_env() {
+                CC=clang CXX=clang++ cmake "$@"
+            }
+        else
+            cmake_init_env() {
+                cmake "$@"
+            }
         fi
        ;;
     *Linux)
