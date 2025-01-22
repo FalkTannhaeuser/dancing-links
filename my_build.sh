@@ -1,12 +1,14 @@
 #!/usr/bin/bash
 cd $(dirname $0)
 set -e -o pipefail
+clang=
 fresh=
 debug=
 test=
 msvc=
 while [ "$1" != "" ] ; do
     case $1 in
+        -c|--clang) clang=1 ; shift ;;
         -f|--fresh) fresh=1 ; shift ;;
         -d|--debug) debug=1 ; shift ;;
         -t|--test)  test=1  ; shift ;;
@@ -22,13 +24,28 @@ case $(uname -o) in
             exit
         fi
         build_dir=build/Cygwin
-        ;;
+        if [ ${clang:=0} -eq 1 ] ; then
+            echo "Clang is not available on this platform" > /dev/stderr
+            exit 1
+        fi
+       ;;
     *Linux)
         if [ ${msvc:=0} -eq 1 ] ; then
-            echo "Microsoft Visual C++ id not available on this platform" > /dev/stderr
+            echo "Microsoft Visual C++ is not available on this platform" > /dev/stderr
             exit 1
         fi
         build_dir=build/Linux
+        if [ ${clang:=0} -eq 1 ] ; then
+            build_dir+=_clang
+            cmake_init_env() {
+                # HACK: clang-scan-deps not found by default :-(
+                CC=clang CXX=clang++ cmake "$@" -D CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS=/usr/bin/clang-scan-deps-19
+            }
+        else
+            cmake_init_env() {
+                cmake "$@"
+            }
+        fi
         ;;
     *)
         echo "Unknown platform $(uname -o)" > /dev/stderr
@@ -37,7 +54,7 @@ case $(uname -o) in
 esac
 
 if [ ! -d ${build_dir} ] || [ ${fresh:=0} -eq 1 ] ; then
-    cmake -S . -B ${build_dir} -G "Ninja Multi-Config" --fresh
+    cmake_init_env -S . -B ${build_dir} -G "Ninja Multi-Config" --fresh
 fi
 
 # Choose Debug / Release / RelWithDebInfo
