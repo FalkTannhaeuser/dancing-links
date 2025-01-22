@@ -131,7 +131,7 @@ public:
     void write(Triple<sqrt_of_size> triple);      //!< \todo change to array Triple<sqrt_of_size>[]
     bool found(Triple<sqrt_of_size> triple);      //!< \return 1 if @p triple is found, 0 otherwise
     //! Equality of cell values.
-    bool operator==(const Sudoku<sqrt_of_size>& other) {
+    bool operator==(const Sudoku<sqrt_of_size>& other) const {
         for(int i=0;i<9;i++) {
             for(int j=0;j<9;j++) {
                 if( (int)grid[i][j] != (int)other.grid[i][j]) return false;
