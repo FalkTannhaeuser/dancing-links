@@ -13,21 +13,19 @@ header() {
 
 case $(uname -o) in
     Cygwin)
-        for config in "" --debug ; do
-            header Cygwin ${config}
-            ./my_build.sh --test ${config}
-
-            header Cygwin Clang ${config}
-            ./my_build.sh --test --clang ${config}
-
+        ssh_err=0
+        for config in "" "--debug" ; do
+            for compiler in "" "--clang" ; do
+                header Cygwin ${compiler} ${config}
+                ./my_build.sh --test ${compiler} ${config}
+                if [ ${ssh_err} -eq 0 ] ; then
+                    header Linux ${compiler} ${config}
+                    ssh -Y -p 2222 ${USER,,}@localhost "${linux_dir}/my_build.sh --test ${compiler} ${config}"
+                    ssh_err=$?
+                fi
+            done
             header MSVC ${config}
             ./my_build.sh --test --msvc ${config}
-
-            header Linux ${config}
-            ssh -Y -p 2222 ${USER,,}@localhost "${linux_dir}/my_build.sh --test ${config}"
-
-            header Linux Clang ${config}
-            ssh -Y -p 2222 ${USER,,}@localhost "${linux_dir}/my_build.sh --test --clang ${config}"
         done
         header Summary:
         find build/ -iname '*.xml' -mmin -10 -ls
