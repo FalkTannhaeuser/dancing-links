@@ -13,6 +13,8 @@ header() {
 
 case $(uname -o) in
     Cygwin)
+        start_timestamp_file=$(mktemp)
+        trap "rm -f ${start_timestamp_file}" SIGTERM SIGINT EXIT
         ssh_err=0
         for config in "" "--debug" ; do
             for compiler in "" "--clang" ; do
@@ -28,7 +30,7 @@ case $(uname -o) in
             ./my_build.sh --test --msvc ${config}
         done
         header Summary:
-        find build/ -iname '*.xml' -mmin -10 -ls
+        find build/ -iname '*.xml' -newer ${start_timestamp_file} -ls
         ;;
     *)
         echo Not implemented > /dev/stderr
