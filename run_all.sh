@@ -1,6 +1,10 @@
 #!/usr/bin/bash
 cd $(dirname $0)
 linux_dir=$(pwd | sed -e 's,^/cygdrive/\w/\(\w\+\)/,/media/sf_\1/,')
+case ${HOSTNAME} in
+    bermudes*)  vbox_linux_user=ns3 ;;
+    *)          vbox_linux_user=${USER,,}
+esac
 
 header() {
     local str COLUMNS
@@ -20,9 +24,9 @@ case $(uname -o) in
             for compiler in "" "--clang" ; do
                 header Cygwin ${compiler} ${config}
                 ./my_build.sh --test ${compiler} ${config}
-                if [ ${ssh_err} -eq 0 ] ; then
+                if [ ${ssh_err} -ne 255 ] ; then  # Unless an SSH error occured previously i.e. the server is presumably down
                     header Linux ${compiler} ${config}
-                    ssh -Y -p 2222 ${USER,,}@localhost "${linux_dir}/my_build.sh --test ${compiler} ${config}"
+                    ssh -Y -p 2222 ${vbox_linux_user}@localhost "${linux_dir}/my_build.sh --test ${compiler} ${config}"
                     ssh_err=$?
                 fi
             done
@@ -30,7 +34,7 @@ case $(uname -o) in
             ./my_build.sh --test --msvc ${config}
         done
         header Summary:
-        find build/ -iname '*.xml' -newer ${start_timestamp_file} -ls
+        find build/ -iname '*.xml' -newer ${start_timestamp_file} -ls | tee >(echo Generated $(wc -l) test output files.)
         ;;
     *)
         echo Not implemented > /dev/stderr

@@ -44,8 +44,9 @@ case $(uname -o) in
         if [ ${clang:=0} -eq 1 ] ; then
             build_dir+=_clang
             cmake_init_env() {
-                # HACK: clang-scan-deps not found by default :-(
-                CC=clang CXX=clang++ cmake "$@" -D CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS=/usr/bin/clang-scan-deps-19
+                # Caution: "-D CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS=/usr/bin/clang-scan-deps-19" may be needed
+                # with clang++-19 under Ubuntu unless we set "set(CMAKE_CXX_SCAN_FOR_MODULES OFF)" in CMakeLists.txt
+                CC=clang CXX=clang++ cmake "$@"
             }
         else
             cmake_init_env() {
