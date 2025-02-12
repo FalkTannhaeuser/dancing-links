@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.20)
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
     message(FATAL_ERROR "In-source builds are not allowed.")
@@ -11,7 +11,7 @@ enable_testing()
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL Clang AND ${CMAKE_SYSTEM_NAME} STREQUAL CYGWIN)
     set(CMAKE_CXX_STANDARD 17)  # Most recent Clang version available on Cygwin so far is 8.0.1
 else()
-    set(CMAKE_CXX_STANDARD 23)
+    set(CMAKE_CXX_STANDARD 20)
 endif()
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)

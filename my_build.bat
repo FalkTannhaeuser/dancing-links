@@ -21,7 +21,7 @@ if not defined VisualStudioVersion (
     set requested_version=-latest
     REM Uncomment one of the following lines to use an older Visual Studio version among multiple installed ones (respectively: 2017, 2019, 2022):
     REM set requested_version=-version [15,16)
-    REM set requested_version=-version [16,17)
+    set requested_version=-version [16,17)
     REM set requested_version=-version [17,18)
     REM For details, see https://github.com/microsoft/vswhere/wiki/Versions
     for /F "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere" -property installationPath !requested_version!`) do call "%%i\VC\Auxiliary\Build\vcvars64.bat"
@@ -43,7 +43,7 @@ if %ninja% EQU 1 (
 if not exist %build_dir%\CMakeFiles\ set fresh=1
 if %fresh% EQU 1 (
     title Compiling using MSVC - preparing build directory
-    cmake -S . -B %build_dir% %cmake_generator% --fresh
+    cmake -S . -B %build_dir% %cmake_generator%
     if !errorlevel! NEQ 0 goto end
 )
  
