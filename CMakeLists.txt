@@ -4,7 +4,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
     message(FATAL_ERROR "In-source builds are not allowed.")
 endif()
 
-project(test_cmake LANGUAGES CXX)
+project(DancingLinks LANGUAGES CXX)
 enable_language(CXX)
 enable_testing()
 
